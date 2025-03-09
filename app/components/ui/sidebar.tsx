@@ -4,7 +4,7 @@ import Link from "next/link"
 import type React from "react"
 import { useState, createContext, useContext } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { IconMenu2, IconX } from "@tabler/icons-react"
+import { IconMenu2, IconX, IconCurrencyBitcoin } from "@tabler/icons-react"
 
 interface Links {
   label: string
@@ -95,8 +95,20 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
         {...props}
       >
         <div className="flex items-center gap-3 z-20">
-          <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-          <span className="font-medium text-black dark:text-white">CryptoFlux</span>
+          <div className="relative h-8 w-8 flex-shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg transform rotate-12 transition-transform hover:rotate-0"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <IconCurrencyBitcoin className="h-5 w-5 text-white" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-base bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              CryptoFlux
+            </span>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+              Trading Dashboard
+            </span>
+          </div>
         </div>
         <div className="flex justify-end z-20">
           <IconMenu2 className="text-neutral-800 dark:text-neutral-200" onClick={() => setOpen(!open)} />
@@ -116,8 +128,20 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
               <div>
                 <div className="flex items-center justify-between mb-0 md:mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-                    <span className="font-medium text-black dark:text-white">CryptoFlux</span>
+                    <div className="relative h-8 w-8 flex-shrink-0">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg transform rotate-12 transition-transform hover:rotate-0"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <IconCurrencyBitcoin className="h-5 w-5 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-base bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        CryptoFlux
+                      </span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Trading Dashboard
+                      </span>
+                    </div>
                   </div>
                   <div className="text-neutral-800 dark:text-neutral-200" onClick={() => setOpen(!open)}>
                     <IconX />

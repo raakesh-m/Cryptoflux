@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react'
+import { useSession } from "next-auth/react"
+import Image from "next/image"
 import {
   IconMoon,
   IconSun,
@@ -18,6 +20,7 @@ import {
 } from '@tabler/icons-react'
 
 export default function SettingsPage() {
+  const { data: session } = useSession()
   const [darkMode, setDarkMode] = useState(false)
   const [notifications, setNotifications] = useState({
     email: true,
@@ -36,8 +39,18 @@ export default function SettingsPage() {
         {/* Profile Settings */}
         <div className="bg-white dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-sm">
           <div className="flex items-center gap-4 mb-6">
-            <div className="h-16 w-16 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
-              <IconUser className="h-8 w-8 text-neutral-500 dark:text-neutral-400" />
+            <div className="h-16 w-16 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
+              {session?.user?.image ? (
+                <Image
+                  src={session.user.image}
+                  alt="Profile picture"
+                  width={64}
+                  height={64}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <IconUser className="h-8 w-8 text-neutral-500 dark:text-neutral-400" />
+              )}
             </div>
             <div>
               <h2 className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white">Profile Settings</h2>
@@ -52,6 +65,7 @@ export default function SettingsPage() {
               </label>
               <input
                 type="text"
+                value={session?.user?.name || ""}
                 placeholder="John Doe"
                 className="w-full bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-lg px-4 py-2.5 text-neutral-900 dark:text-white"
               />
@@ -62,7 +76,7 @@ export default function SettingsPage() {
               </label>
               <input
                 type="email"
-                value="randomuser@example.com"
+                value={session?.user?.email || ""}
                 readOnly
                 className="w-full bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-lg px-4 py-2.5 text-neutral-900 dark:text-white cursor-not-allowed"
                 title="This email cannot be changed"

@@ -82,7 +82,7 @@ export default function MarketPage() {
                     const date = new Date(label)
                     return date.toLocaleDateString()
                   }}
-                  contentStyle={{ backgroundColor: 'white', borderRadius: '8px' }}
+                  contentStyle={{ backgroundColor: 'white', borderRadius: '8px', color: 'black' }}
                 />
                 <Line 
                   type="monotone" 

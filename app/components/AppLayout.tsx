@@ -8,7 +8,8 @@ import {
   IconWallet,
   IconExchange,
   IconSettings,
-  IconLogout
+  IconLogout,
+  IconCurrencyBitcoin,
 } from "@tabler/icons-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -99,23 +100,38 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
 const Logo = () => {
   return (
-    <Link href="/" className="font-normal  space-x-2 items-center text-sm md:flex hidden text-black py-1 relative z-20">
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-      <motion.span
+    <Link href="/" className="font-normal space-x-3 items-center text-sm md:flex hidden py-1 relative z-20">
+      <div className="relative h-8 w-8 flex-shrink-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg transform rotate-12 transition-transform hover:rotate-0"></div>
+        <div className="absolute inset-0 flex items-center justify-center ">
+          <IconCurrencyBitcoin className="h-5 w-5 text-white" />
+        </div>
+      </div>
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-medium text-black dark:text-white  whitespace-pre"
+        className="flex flex-col"
       >
-        CryptoFlux
-      </motion.span>
+        <motion.span className="font-bold text-base bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+          CryptoFlux
+        </motion.span>
+        <motion.span className="text-xs text-neutral-500 dark:text-neutral-400">
+          Trading Dashboard
+        </motion.span>
+      </motion.div>
     </Link>
   )
 }
 
 const LogoIcon = () => {
   return (
-    <Link href="/" className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+    <Link href="/" className="font-normal flex justify-center items-center text-sm text-black py-1 relative z-20 w-full">
+      <div className="relative h-8 w-8 flex-shrink-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg transform rotate-12 transition-transform hover:rotate-0"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <IconCurrencyBitcoin className="h-5 w-5 text-white" />
+        </div>
+      </div>
     </Link>
   )
 } 

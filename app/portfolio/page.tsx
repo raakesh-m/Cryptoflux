@@ -74,7 +74,7 @@ export default function PortfolioPage() {
           <div className="bg-white dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-sm">
             <h3 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Profit</h3>
             <div className="mt-2 flex items-baseline gap-2">
-              <p className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-white">$15,678.90</p>
+              <p className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-white">$15,778.90</p>
               <span className="flex items-center text-xs sm:text-sm text-green-500">
                 <IconTrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
                 +14.3%

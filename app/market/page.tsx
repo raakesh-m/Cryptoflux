@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react'
-import useCryptoData from '../hooks/useCryptoData'
+import useRealtimeCryptoData from '../hooks/useRealtimeCryptoData'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { IconTrendingUp, IconTrendingDown } from '@tabler/icons-react'
 
 export default function MarketPage() {
-  const { cryptoData, isLoading, isError } = useCryptoData()
   const [selectedCrypto, setSelectedCrypto] = useState('')
+  const [timeRange, setTimeRange] = useState('1D')
+  const { cryptoData, isLoading, isError } = useRealtimeCryptoData(timeRange)
 
   if (isLoading) {
     return (
@@ -28,7 +29,7 @@ export default function MarketPage() {
   // Get chart data based on selection
   const chartData = selectedCrypto
     ? cryptoData?.find(crypto => crypto.id === selectedCrypto)?.priceHistory
-    : cryptoData?.[0]?.priceHistory // Default to first crypto if none selected
+    : cryptoData?.[0]?.priceHistory
 
   return (
     <div className="flex-1 p-3 sm:p-6 bg-gray-50 dark:bg-neutral-900 overflow-auto">
@@ -54,11 +55,28 @@ export default function MarketPage() {
 
         {/* Price Chart */}
         <div className="bg-white dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-sm">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-neutral-900 dark:text-white">
-            {selectedCrypto 
-              ? `${cryptoData?.find(c => c.id === selectedCrypto)?.name} Price Chart` 
-              : 'Market Overview'}
-          </h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white">
+              {selectedCrypto 
+                ? `${cryptoData?.find(c => c.id === selectedCrypto)?.name} Price Chart` 
+                : 'Market Overview'}
+            </h2>
+            <div className="flex gap-2">
+              {['1D', '1W', '1M', '3M', '1Y'].map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setTimeRange(range)}
+                  className={`px-3 py-1 rounded-lg text-xs sm:text-sm ${
+                    timeRange === range
+                      ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-700'
+                  }`}
+                >
+                  {range}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="h-[300px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
@@ -67,7 +85,9 @@ export default function MarketPage() {
                   dataKey="timestamp"
                   tickFormatter={(value) => {
                     const date = new Date(value)
-                    return `${date.getMonth() + 1}/${date.getDate()}`
+                    return timeRange === '1D'
+                      ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      : `${date.getMonth() + 1}/${date.getDate()}`
                   }}
                   tick={{ fontSize: 12 }}
                 />
@@ -75,12 +95,15 @@ export default function MarketPage() {
                   tickFormatter={(value) => `$${value.toLocaleString()}`}
                   tick={{ fontSize: 12 }}
                   width={80}
+                  domain={['auto', 'auto']}
                 />
                 <Tooltip 
                   formatter={(value: number) => [`$${value.toLocaleString()}`, 'Price']}
                   labelFormatter={(label) => {
                     const date = new Date(label)
-                    return date.toLocaleDateString()
+                    return timeRange === '1D'
+                      ? date.toLocaleTimeString()
+                      : date.toLocaleDateString()
                   }}
                   contentStyle={{ backgroundColor: 'white', borderRadius: '8px', color: 'black' }}
                 />
@@ -90,6 +113,7 @@ export default function MarketPage() {
                   stroke="#2563eb" 
                   strokeWidth={2}
                   dot={false}
+                  isAnimationActive={false}
                 />
               </LineChart>
             </ResponsiveContainer>

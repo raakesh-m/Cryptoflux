@@ -10,11 +10,12 @@ import {
   IconSettings,
   IconLogout,
   IconCurrencyBitcoin,
+  IconLogin,
 } from "@tabler/icons-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { useSession, signOut } from "next-auth/react"
+import { useSession, signOut, signIn } from "next-auth/react"
 
 // Main layout component
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
 
   // Navigation links configuration
-  const links = [
+  const commonLinks = [
     {
       label: "Dashboard",
       href: "/dashboard",
@@ -43,6 +44,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       href: "/exchange",
       icon: <IconExchange className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
     },
+  ]
+
+  const authenticatedLinks = [
     {
       label: "Settings",
       href: "/settings",
@@ -55,6 +59,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       onClick: () => signOut(),
     },
   ]
+
+  const guestLinks = [
+    {
+      label: "Sign In",
+      href: "/auth/signin",
+      icon: <IconLogin className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />,
+      onClick: () => signIn(),
+    },
+  ]
+
+  const links = [...commonLinks, ...(session ? authenticatedLinks : guestLinks)]
 
   return (
     <div className="h-screen flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1">

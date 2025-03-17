@@ -8,8 +8,8 @@ import { IconTrendingUp, IconTrendingDown, IconWallet, IconHistory, IconChartPie
 const COLORS = ['#2563eb', '#16a34a', '#dc2626', '#eab308', '#6366f1']
 
 export default function PortfolioPage() {
-  const { cryptoData, isLoading, isError } = useCryptoData()
   const [timeRange, setTimeRange] = useState('1W')
+  const { cryptoData, isLoading, isError } = useCryptoData(timeRange)
 
   if (isLoading) {
     return (
@@ -120,7 +120,9 @@ export default function PortfolioPage() {
                     dataKey="timestamp"
                     tickFormatter={(value) => {
                       const date = new Date(value)
-                      return `${date.getMonth() + 1}/${date.getDate()}`
+                      return timeRange === '1D' 
+                        ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : `${date.getMonth() + 1}/${date.getDate()}`
                     }}
                     tick={{ fontSize: 12 }}
                   />

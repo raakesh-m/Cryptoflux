@@ -23,14 +23,46 @@ interface CryptoData {
   }
 }
 
-// Helper function to generate timestamps for the last 7 days
-const generateTimestamps = () => {
+// Helper function to generate timestamps based on time range
+const generateTimestamps = (range: string) => {
   const timestamps = []
   const now = new Date()
+  let points = 7
+  let interval = 1
+
+  switch (range) {
+    case '1D':
+      points = 24
+      interval = 1/24 // hourly for 1 day
+      break
+    case '1W':
+      points = 7
+      interval = 1 // daily for 1 week
+      break
+    case '1M':
+      points = 30
+      interval = 1 // daily for 1 month
+      break
+    case '3M':
+      points = 90
+      interval = 1 // daily for 3 months
+      break
+    case '1Y':
+      points = 365
+      interval = 1 // daily for 1 year
+      break
+    case 'ALL':
+      points = 365 * 2 // 2 years of data
+      interval = 1
+      break
+    default:
+      points = 7
+      interval = 1
+  }
   
-  for (let i = 6; i >= 0; i--) {
+  for (let i = points - 1; i >= 0; i--) {
     const date = new Date(now)
-    date.setDate(date.getDate() - i)
+    date.setDate(date.getDate() - i * interval)
     timestamps.push(date.toISOString().split('T')[0])
   }
   
@@ -41,7 +73,7 @@ const generateTimestamps = () => {
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 // Custom hook for cryptocurrency data
-const useCryptoData = () => {
+const useCryptoData = (timeRange: string = '1W') => {
   const { data, error } = useSWR<CryptoData[]>(
     `${COINGECKO_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true`,
     fetcher,
@@ -53,14 +85,25 @@ const useCryptoData = () => {
 
   const isLoading = !data && !error
 
-  const timestamps = generateTimestamps()
+  const timestamps = generateTimestamps(timeRange)
 
-  // Transform API data into required format
+  // Transform API data into required format with mock price history for different time ranges
   const formattedData = data?.map((coin: CryptoData) => {
-    const priceHistory = coin.sparkline_in_7d.price.slice(0, 7).map((price, index) => ({
-      timestamp: timestamps[index],
-      price: Number(price.toFixed(2))
-    }))
+    // Generate mock price history based on current price and time range
+    const basePrice = coin.current_price
+    const volatility = 0.05 // 5% price variation
+    
+    const priceHistory = timestamps.map((timestamp, index) => {
+      // Create somewhat realistic price variations based on the time range
+      const dayOffset = Math.sin(index / timestamps.length * Math.PI * 2)
+      const randomFactor = 1 + (Math.random() - 0.5) * volatility
+      const price = basePrice * (1 + dayOffset * volatility) * randomFactor
+      
+      return {
+        timestamp,
+        price: Number(price.toFixed(2))
+      }
+    })
 
     return {
       id: coin.id,
